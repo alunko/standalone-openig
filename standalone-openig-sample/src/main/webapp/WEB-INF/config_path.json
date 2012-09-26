@@ -1,0 +1,127 @@
+{
+    "heap": {
+        "objects": [
+            {
+                "name": "Dispatcher",
+                "type": "DispatchServlet",
+                "comment": "Dispatch Google or Wikipedia or Local HTML File.",
+                "config": {
+                    "bindings": [
+                        {
+                            "pattern":"^/search.*",
+                            "object":"Google"
+                        },
+                        {
+                            "pattern":"^/w/index.php.*",
+                            "object":"Wikipedia"
+                        },
+                        {
+                            "pattern":".*",
+                            "object":"LOCALFILE"
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "Google",
+                "type": "HandlerServlet",
+                "config": {
+                    "handler": "AuthenticateHandler",
+                    "baseURI": "http://www.google.com"
+                }
+            },
+            {
+                "name": "Wikipedia",
+                "type": "HandlerServlet",
+                "config": {
+                    "handler": "AuthenticateHandler",
+                    "baseURI": "http://en.wikipedia.org"
+                }
+            },
+            {
+                "name": "LOCALFILE",
+                "type": "HandlerServlet",
+                "config": {
+                    "handler": "AuthenticateHandler",
+                    "baseURI": "http://LOCALFILE"
+                }
+            },
+            {
+                "name": "AuthenticateHandler",
+                "type": "AuthenticateHandler",
+                "comment": "Authenticate with DB.",
+                "config": {
+                    "dataSource": "java:comp/env/jdbc/openig",
+                    "authPreparedStatement": "SELECT USERNAME FROM USERS WHERE USERNAME = ? AND PASSWORD = ?",
+                    "authParameters": ["${username}", "${password}"],
+                    "target": "${exchange.credentials}",
+                    "successHandler": "OutgoingChain",
+                    "failureHandler": "LoginPageHandler",
+                    "username": "${exchange.request.form['openig.username'][0]}",
+                    "password": "${exchange.request.form['openig.password'][0]}"
+                }
+            },
+            {
+                "name": "OutgoingChain",
+                "type": "Chain",
+                "config": {
+                    "filters": ["HostNameHeaderFilter","LogToTemporaryFile"],
+                    "handler": "FileOrServerDispatchHandler"
+                }   
+            },
+            {
+                 "name": "HostNameHeaderFilter",
+                 "type": "ExpressionValueHeaderFilter",
+                 "config": {
+                     "messageType": "REQUEST",
+                     "remove": [ "host" ],
+                      "add": {
+                          "host": ["${exchange.request.uri.host}"]
+                      }
+                 }
+            },
+            {
+                 "name": "LogToTemporaryFile",
+                 "type": "CaptureFilter",
+                 "config": {
+                     "file": "c:/gateway.log",
+                 }
+            },
+            {
+                 "name": "FileOrServerDispatchHandler",
+                 "type": "DispatchHandler",
+                 "config": {
+                     "bindings": [ 
+                         {
+                             "condition": "${exchange.request.uri.host == 'LOCALFILE'}",
+                             "handler": "HtmlFileHandler",
+                         },
+                         {
+                             "handler": "ClientHandler",
+                         }
+                     ]   
+                 }   
+            },
+            {
+                "name": "ClientHandler",
+                "comment": "Sends all requests to remote servers.",
+                "type": "ClientHandler",
+                "config": {}
+            },
+            {
+                "name": "LoginPageHandler",
+                "type":"LoginPageHandler",
+                "config": {
+                    "loginPage": "/login.html",
+                    "errorMessage": "<span style=\"color:red;\">Login Failed. Please Login.</span>"
+                    }
+            },
+            {
+                "name": "HtmlFileHandler",
+                "type":"HtmlFileHandler",
+                "config": {}
+            }
+        ]
+    },
+    "servletObject": "Dispatcher",
+}

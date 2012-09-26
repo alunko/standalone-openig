@@ -1,0 +1,5 @@
+All of source code, compiled code, and documentation 
+contained in this distribution 
+are in the Public Domain.
+
+NO WARRANTY or guarantee of fitness for any purpose.
