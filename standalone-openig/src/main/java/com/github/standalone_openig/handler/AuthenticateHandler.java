@@ -52,6 +52,7 @@ public class AuthenticateHandler extends GenericHandler  {
 	public Handler failureHandler;
 	public Expression username;
 	public Expression password;
+	public String logoutPath = "/logout";
 	public String authCallback;
 	
 	/** specified callback on authenticate. */
@@ -67,14 +68,29 @@ public class AuthenticateHandler extends GenericHandler  {
 	/** authParameters. special char Password. evaluate parameter 'password'. */
 	public static final String PARAMETER_RESERVED_PASSWORD = "${password}";
 	
+	/**
+	 * authenticate execute
+	 * @param exchange Exchange
+	 */
 	public void handle(Exchange exchange) throws HandlerException, IOException {
 		LogTimer timer = logger.getTimer().start();
 		
 		HttpServletRequest req = (HttpServletRequest) exchange.get(HttpServletRequest.class.getName());
 		HttpServletResponse res = (HttpServletResponse) exchange.get(HttpServletResponse.class.getName());
 		HttpSession session = req.getSession();
-		Map<String, Object> userInfo = (Map<String, Object>) session.getAttribute(AuthenticateHandler.SESSION_USER_INFO_KEY);
+		if(req.getRequestURI().equals(logoutPath)){
+			//logout process
+			session.invalidate();
+			//Redirect to root
+			res.sendRedirect("/");
+			Response response = new Response();
+			response.status = 307;
+			exchange.response = response;
+			return;
+		}
 
+		Map<String, Object> userInfo = (Map<String, Object>) session.getAttribute(AuthenticateHandler.SESSION_USER_INFO_KEY);
+		
 		String uname = null;
 		if(username != null){
 			uname = username.eval(exchange, String.class);
@@ -289,6 +305,10 @@ public class AuthenticateHandler extends GenericHandler  {
 			handler.failureHandler = HeapUtil.getRequiredObject(heap, config.get("failureHandler"), Handler.class);
 			handler.username = JsonValueUtil.asExpression(config.get("username"));
 			handler.password = JsonValueUtil.asExpression(config.get("password"));
+			String logoutPath = config.get("logoutPath").asString();
+			if(logoutPath != null && !"".equals(logoutPath)){
+				handler.logoutPath = logoutPath;
+			}
 			return handler;
 		}
 	}

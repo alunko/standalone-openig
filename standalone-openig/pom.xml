@@ -4,7 +4,7 @@
 	<groupId>com.github.standalone-openig</groupId>
 	<artifactId>standalone-openig</artifactId>
 	<packaging>jar</packaging>
-	<version>1.1</version>
+	<version>1.2</version>
 	<name>Standalone OpenIG Extensions</name>
 	<repositories>
 		<repository>
