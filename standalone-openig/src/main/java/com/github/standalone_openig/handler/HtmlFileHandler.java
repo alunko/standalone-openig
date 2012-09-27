@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -59,7 +60,7 @@ public class HtmlFileHandler extends GenericHandler {
 		String pageContent = loadFile(targetFile, exchange);
 		Response response = new Response();
 		response.status = 200;
-		HttpUtil.toEntity(response, pageContent.toString(), null);
+		HttpUtil.toEntity(response, pageContent.toString(), Charset.forName(charset));
 		exchange.response = response;
 		timer.stop();
 	}
