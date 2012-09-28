@@ -66,7 +66,14 @@ public class LoginPageHandler extends GenericHandler {
 			}
 		}
 		StringBuilder loginPageContent = inputStreemToStringBuilder(targetFileIs);
-		replaceStringBuilder(loginPageContent, "${action}", req.getRequestURI());
+		
+		String actionPath = req.getRequestURI();
+		String actionQueryString = req.getQueryString();
+		if(actionQueryString != null && !"".equals(actionQueryString)){
+			actionPath += "?" + actionQueryString;
+		}
+		
+		replaceStringBuilder(loginPageContent, "${action}", actionPath);
 		if(isLoginFailure){
 			//embed error message
 			replaceStringBuilder(loginPageContent, "${errorMessage}", errorMessage);

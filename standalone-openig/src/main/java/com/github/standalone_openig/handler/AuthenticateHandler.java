@@ -148,7 +148,12 @@ public class AuthenticateHandler extends GenericHandler  {
 					}));
 			if(isAutheiticateExecuted){
 				//Redirect to clear login parameters
-				res.sendRedirect(req.getRequestURI());
+				String actionPath = req.getRequestURI();
+				String actionQueryString = req.getQueryString();
+				if(actionQueryString != null && !"".equals(actionQueryString)){
+					actionPath += "?" + actionQueryString;
+				}
+				res.sendRedirect(actionPath);
 				Response response = new Response();
 				response.status = 307;
 				exchange.response = response;
