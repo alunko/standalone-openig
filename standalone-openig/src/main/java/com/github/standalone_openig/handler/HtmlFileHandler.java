@@ -47,7 +47,10 @@ public class HtmlFileHandler extends GenericHandler {
 			}
 			targetFile = req.getRequestURI();
 		}
+		Response response = new Response();
 		if("/".equals(targetFile)){
+			response.headers.remove("Content-Type");
+			response.headers.add("Content-Type", "text/html");
 			//default html file
 			if(sc.getResourceAsStream("index.htm") != null){
 				targetFile = "/index.htm";
@@ -58,7 +61,6 @@ public class HtmlFileHandler extends GenericHandler {
 		}
 
 		String pageContent = loadFile(targetFile, exchange);
-		Response response = new Response();
 		response.status = 200;
 		HttpUtil.toEntity(response, pageContent.toString(), Charset.forName(charset));
 		exchange.response = response;
