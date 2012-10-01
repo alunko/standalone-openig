@@ -37,6 +37,7 @@ public class LoginPageHandler extends GenericHandler {
 		LogTimer timer = logger.getTimer().start();
 
 		HttpServletRequest req = (HttpServletRequest) exchange.get(HttpServletRequest.class.getName());
+		String actionPath = req.getRequestURI();
 		boolean isLoginFailure = (req.getAttribute(AuthenticateHandler.REQUEST_LOGIN_FAILURE_KEY) != null);
 
 		String targetFile = loginPage;
@@ -44,7 +45,10 @@ public class LoginPageHandler extends GenericHandler {
 		String pageContent = loadFile(targetFile, isLoginFailure, exchange);
 		Response response = new Response();
 		response.status = 200;
+		response.headers.remove("Content-Type");
+		response.headers.add("Content-Type", "text/html");
 		HttpUtil.toEntity(response, pageContent, Charset.forName(charset));
+		System.out.println(response.headers.getFirst("Content-Type"));
 		exchange.response = response; // finally replace response in the
 										// exchange
 		timer.stop();
