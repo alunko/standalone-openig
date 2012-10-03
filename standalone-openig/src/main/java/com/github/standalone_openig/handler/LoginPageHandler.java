@@ -37,7 +37,6 @@ public class LoginPageHandler extends GenericHandler {
 		LogTimer timer = logger.getTimer().start();
 
 		HttpServletRequest req = (HttpServletRequest) exchange.get(HttpServletRequest.class.getName());
-		String actionPath = req.getRequestURI();
 		boolean isLoginFailure = (req.getAttribute(AuthenticateHandler.REQUEST_LOGIN_FAILURE_KEY) != null);
 
 		String targetFile = loginPage;

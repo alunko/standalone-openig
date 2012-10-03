@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 
+import javax.activation.FileTypeMap;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
@@ -58,6 +59,12 @@ public class HtmlFileHandler extends GenericHandler {
 			else{
 				targetFile = "/index.html";
 			}
+		}
+		else{
+	        FileTypeMap filetypeMap = FileTypeMap.getDefaultFileTypeMap();
+	        String contentType = filetypeMap.getContentType(targetFile.toLowerCase());
+			response.headers.remove("Content-Type");
+			response.headers.add("Content-Type", contentType);
 		}
 
 		String pageContent = loadFile(targetFile, exchange);
