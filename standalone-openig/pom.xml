@@ -4,7 +4,7 @@
 	<groupId>com.github.standalone-openig</groupId>
 	<artifactId>standalone-openig</artifactId>
 	<packaging>jar</packaging>
-	<version>1.5</version>
+	<version>1.6</version>
 	<name>Standalone OpenIG Extensions</name>
 	<repositories>
 		<repository>
@@ -23,14 +23,14 @@
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
-			<id>central</id>
+			<id>forgerock.org</id>
 			<name>repo</name>
 			<url>http://maven.forgerock.org/repo/repo</url>
 		</repository>
 		<repository>
 			<snapshots />
 			<id>snapshots</id>
-			<name>repo</name>
+			<name>forgerock.org snapshot</name>
 			<url>http://maven.forgerock.org/repo/repo</url>
 		</repository>
 	</repositories>
