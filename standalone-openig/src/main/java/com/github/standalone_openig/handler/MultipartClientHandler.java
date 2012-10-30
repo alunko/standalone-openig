@@ -34,7 +34,6 @@ import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.forgerock.json.fluent.JsonValueException;
-import org.forgerock.openig.handler.ClientHandler;
 import org.forgerock.openig.handler.GenericHandler;
 import org.forgerock.openig.handler.HandlerException;
 import org.forgerock.openig.header.ConnectionHeader;
@@ -202,6 +201,7 @@ public class MultipartClientHandler extends GenericHandler  {
     private static class EntityRequest extends HttpEntityEnclosingRequestBase {
         private final String method;
         public EntityRequest(Request request) {
+        	System.out.println("aaaaaaaaaaa");
             this.method = request.method;
             InputStreamEntity entity = new InputStreamEntity(request.entity, new ContentLengthHeader(request).length);
             entity.setContentType(new MultipartContentTypeHeader(request).toString());
@@ -228,7 +228,7 @@ public class MultipartClientHandler extends GenericHandler  {
     public static class Heaplet extends NestedHeaplet {
         @Override public Object create() throws HeapException, JsonValueException {
             Integer connections = config.get("connections").asInteger(); // optional
-            return (connections != null ? new ClientHandler(connections.intValue(), this.storage) : new ClientHandler(this.storage));
+            return (connections != null ? new MultipartClientHandler(connections.intValue(), this.storage) : new MultipartClientHandler(this.storage));
         }
     }
 }

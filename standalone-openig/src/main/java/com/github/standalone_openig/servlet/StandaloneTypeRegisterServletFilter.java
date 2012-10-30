@@ -30,6 +30,7 @@ public class StandaloneTypeRegisterServletFilter implements Filter {
 			aliases.put("LoginPageHandler", "com.github.standalone_openig.handler.LoginPageHandler");
 			aliases.put("ExpressionValueHeaderFilter", "com.github.standalone_openig.filter.ExpressionValueHeaderFilter");
 			aliases.put("LoggerCaptureFilter", "com.github.standalone_openig.filter.LoggerCaptureFilter");
+			aliases.put("MultipartClientHandler", "com.github.standalone_openig.handler.MultipartClientHandler");
 		} catch (NoSuchFieldException e) {
 			//nop
 			e.printStackTrace();

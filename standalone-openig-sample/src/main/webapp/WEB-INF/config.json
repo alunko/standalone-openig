@@ -86,8 +86,8 @@
             },
             {
                 "name": "ClientHandler",
-                "comment": "Sends all requests to remote servers.",
-                "type": "ClientHandler",
+                "comment": "Sends all requests to remote servers. supported multipart form data.",
+                "type": "MultipartClientHandler",
                 "config": {}
             },
             {

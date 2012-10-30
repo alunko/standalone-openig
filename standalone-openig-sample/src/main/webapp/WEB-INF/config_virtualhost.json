@@ -90,7 +90,7 @@
             {
                 "name": "ClientHandler",
                 "comment": "Sends all requests to remote servers.",
-                "type": "ClientHandler",
+                "type": "MultipartClientHandler",
                 "config": {}
             },
             {
